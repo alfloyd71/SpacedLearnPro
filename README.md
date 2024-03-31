@@ -3,4 +3,4 @@ Flashcards app that uses the 'flashcard box system' to organize and use flashcar
 
 ![SpacedLearnPro.png](https://www.freesmartphoneapps.com/static/projects/images/SpacedLearnPro.png)
 
-(https://www.freesmartphoneapps.com/flashcardsjs/)
+https://www.freesmartphoneapps.com/flashcardsjs/
