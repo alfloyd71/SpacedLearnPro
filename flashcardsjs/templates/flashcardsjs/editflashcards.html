@@ -1,0 +1,192 @@
+{% extends 'flashcardsjs/base-javascript.html' %}
+{% load static %}
+
+{% block customheadtags %}
+
+<!--bootstrap minified reduced size css version-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<!--links to javascript files-->
+<!--the latest version jquery 3.5 should come before bootstap-min.js-->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<!--Popper.js is a popular JavaScript library used for positioning tooltips and popovers in web applications.-->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<!--default questions are in questions.js code snippet-->
+<script src="{% static 'flashcardsjs/js/questions.js' %}"></script>
+
+{% endblock customheadtags %}
+
+{% block title %}
+This page allows you to personalize your flashcards to suit your preferences.
+{% endblock title%}
+
+{% block description %}
+<!--custom meta description goes here...-->
+{% endblock description %}
+
+
+  
+{% block content %}
+
+  {% block navbar %}
+  {% endblock navbar %}
+    
+    <main id="main-edit-flashcards">
+
+      <article>
+      <form id ="form-flashcards" method = "post">
+            {% csrf_token %}
+    
+                    <table>
+                      <tr><td>Question</td></tr>
+                      <tr><td>{{ form.question }}</td></tr>
+                      <tr><td>Answer</td></tr>
+                      <tr><td>{{ form.answer }}</td></tr>
+                    </table>
+                    
+          
+                    <button id="button-save-flashcard" class="btn btn-primary">Save Flashcard</button>
+                    <button id="button-removeall-flashcards" class="btn btn-primary">Remove All Flashcards</button>     
+        
+      </form>
+
+      
+  </article>
+  </main>
+    
+{% endblock %}
+
+
+
+<!-- footer goes here...-->
+{% block footer %}
+<footer class="footer py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-8 mx-auto text-center mt-1">
+            &nbsp;
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-8 mx-auto text-center mt-1">
+            <p class="mb-0 text-secondary">
+                &copy2024 MyWebsite.com
+            </p>
+        </div>
+      </div>
+    </div>
+</footer>
+{% endblock footer %}
+
+{% block script %}
+  <script nonce="{{ request.csp_nonce }}">
+    let mycards = []
+    const question = document.getElementById("card-question")
+    const answer = document.getElementById("card-answer")
+    
+    document.getElementById("button-save-flashcard").addEventListener("click", (event)=>{
+      event.preventDefault()
+      console.log(question.value)
+      
+      saveToLocalStorage()
+      console.log("mycards inside button save event ",mycards)
+      //redirect to /editflashcards
+      window.location.href = ""
+
+      
+    })
+    document.getElementById("button-removeall-flashcards").addEventListener("click",(event)=>{
+      event.preventDefault()
+      clearLocalStorage()
+    })
+      
+    const preloadQuestions=()=>{
+    
+      mycards = [
+        {question:"And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",
+        answer:"Revelation 21:4", box:1},
+        {question:"I can do all things through Christ which strengtheneth me.",
+        answer:"Philippians 4:13 KJV", box:4},
+        {question:"Trust in the LORD with all thine heart; and lean not unto thine own understanding.",
+        answer:"Proverbs 3:5 KJV", box:4},
+        
+    
+    ];
+    }
+  
+  const capitalizeWords=(inputString)=>{
+    return inputString.replace(/\b\w/g, function(match) {
+        return match.toUpperCase();
+    });
+  }
+
+  window.onload = function () {
+    const first_box = document.getElementById("first-box")
+    const second_box = document.getElementById("second-box")
+    const third_box = document.getElementById("third-box")
+    const fourth_box = document.getElementById("fourth-box")
+    const fifth_box = document.getElementById("fifth-box")
+    preloadQuestions()
+    mycards=JSON.parse(localStorage.getItem("flashcards")) || []
+    console.log(mycards)
+   
+    tallyBoxes(mycards)
+// end window.onload function
+}
+  
+  
+  const clearLocalStorage=()=>{
+    const confirm_remove_all=window.confirm("Would you like to remove all flashcards?")
+    if(confirm_remove_all){
+      localStorage.clear()
+      window.alert("All flashcards have been removed from your web browser")
+      //redirect to /editflashcards
+      window.location.href = ""
+    }
+  }
+  const saveToLocalStorage=()=>{
+      let match=false;let parsed_question;let unparsed_question;
+      unparsed_question=question.value
+      try{
+        parsed_question=capitalizeWords(unparsed_question).trim()
+        for (let i=0;i<mycards.length;i++){
+          if(capitalizeWords(mycards[i]['question']).trim()===parsed_question){
+            console.log("capitalized = ",parsed_question, mycards[i]['question'])
+            match=true
+          }
+         }
+      } 
+      catch (error){
+        console.error("An error occurred:", error.message);
+      }
+      finally {
+        // Code that will always be executed
+        console.log("This will be executed no matter what.");
+      }
+
+      if(match===false){
+        const confirm_save_flashcard = window.confirm(`Would you like to save "${unparsed_question}"" to your flashcards list?`) 
+        if(confirm_save_flashcard){
+          mycards.push({question:question.value, answer:answer.value, box:1})
+          // localStorage.clear() clears everything stored in the localStorage for the current domain.
+          localStorage.clear()
+          localStorage.setItem("flashcards",JSON.stringify(mycards))//convert mycards  back into a string
+          window.confirm(`"${unparsed_question}" has been added to your flashcards list.`)
+        }
+       
+      }
+      else{
+        window.alert(`"${unparsed_question}" has already been added to your flashcards list.`)        
+      }
+
+      
+
+  }
+
+  </script>
+
+<script src="{% static 'flashcardsjs/js/tally-boxes.js' %}" ></script>
+{% endblock script %}
