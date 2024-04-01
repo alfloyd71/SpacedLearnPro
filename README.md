@@ -8,6 +8,6 @@ Box 2 (Review): Flashcards that have been successfully recalled a few times are 
 Box 3 (Mastery): Cards from Box 2 that have been consistently recalled correctly are promoted to this box for less frequent review.
 Optional Boxes: Some systems may include additional boxes for more advanced levels of mastery, such as Box 4 and Box 5.
 
-![SpacedLearnPro.png](https://www.freesmartphoneapps.com/static/projects/images/SpacedLearnPro.png)
+![SpacedLearnPro.png](https://www.freesmartphoneapps.com/static/projects/images/SpacedLearnProAndroid.png)
 
 https://www.freesmartphoneapps.com/flashcardsjs/
