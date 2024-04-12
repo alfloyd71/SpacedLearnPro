@@ -118,6 +118,7 @@ This page allows you to personalize your flashcards to suit your preferences.
     }
   
   const capitalizeWords=(inputString)=>{
+    // \w matches any word character, equivalent to [a-zA-Z0-9_]
     return inputString.replace(/\b\w/g, function(match) {
         return match.toUpperCase();
     });
@@ -183,7 +184,7 @@ This page allows you to personalize your flashcards to suit your preferences.
       }
 
       
-
+  // end saveToLocalStorage    
   }
 
   </script>

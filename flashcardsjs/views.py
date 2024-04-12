@@ -35,6 +35,8 @@ def fetchCard(request):
     return render(request, "flashcardsjs/card.html")
 
 def showFlashcards(request):
+    form=FlashcardsForm()
+    context={'form':form, }
     return render(request, "flashcardsjs/index.html",)
 
 def getBox(request):

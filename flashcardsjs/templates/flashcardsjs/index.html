@@ -56,15 +56,18 @@
       margin: 0%;
       width: 100%;
     }
+    #main-update-flashcard{
+      display: none;
+    }
 
     #row1{
       padding-top:5% ;
     }
 
-    a:visited{
-      color: blue;
+    #textarea-question, #textarea-answer{
+      width: 50em;
     }
-  
+
   </style>
   {% endblock stylehead%}
 
@@ -81,8 +84,30 @@
     <span id="insert-html-here"></span>
     
     </main>
-    <!-- html for box page goes here -->
 
+    <main id="main-update-flashcard">
+
+      <article>
+      <form id ="form-flashcards" method = "post">
+            {% csrf_token %}
+    
+                    <table>
+                      <tr><td>Question</td></tr>
+                      <tr><td><textarea id="textarea-question">Question for this flashcard</textarea></td></tr>
+                      <tr><td>Answer</td></tr>
+                      <tr><td><textarea id="textarea-answer">Answer for this flashcard</textarea></td></tr>
+                    </table>
+                    
+          
+                    <button id="button-save-flashcard" class="btn btn-primary">Save Flashcard</button>
+        
+      </form>
+
+      
+  </article>
+  </main>
+
+    <!-- html for box page goes here -->
     {% include 'flashcardsjs/card.html' %}
     
   
@@ -113,6 +138,8 @@
   {% block script %}
   <script nonce="{{ request.csp_nonce }}">
     // GLOBAL VARIABLES
+    let clean_question
+    let clean_answer
     let parameters_box=1
     let mycards
     let inputarea, flashcard, reference,flashcards
@@ -122,8 +149,12 @@
     let strmyFlashCards;
     let box1=[];let box2=[];let box3=[];
     const main = document.getElementById("index-main")
+    const main_update_flashcard = document.getElementById("main-update-flashcard")
     const card_question = document.getElementById("card-question")
     const card_answer = document.getElementById("card-answer")
+    const textarea_question = document.getElementById("textarea-question")
+    const textarea_answer = document.getElementById("textarea-answer")
+    const button_save_flashcard = document.getElementById("button-save-flashcard")
     const boxnum = document.getElementById("boxnum")
     const boxes_main = document.getElementById("boxes-main")
     const insert_html = document.getElementById("insert-html-here")
@@ -132,6 +163,16 @@
     const hyperlink_x = document.getElementById("hyperlink-x")
     let global_random_flashcard_index
     let global_random_flashcards
+    let textarea_question_value = ""
+    let textarea_answer_value = ""
+
+    textarea_question.addEventListener(("input"),(event)=>{
+      textarea_question_value = textarea_question.value
+    })
+
+    textarea_answer.addEventListener(("input"),(event)=>{
+      textarea_answer_value = textarea_answer.value
+    })
 
     hyperlink_check.addEventListener(("click"),(element) =>{
     let updated = false; // Flag to track if a card was updated
@@ -175,16 +216,82 @@
   
       }
   })
-    const showRandomFlashcard=(box)=>{
+
+  const capitalizeWords=(inputString)=>{
+    // \w matches any word character, equivalent to [a-zA-Z0-9_]
+    return inputString.replace(/\b\w/g, function(match) {
+        return match.toUpperCase();
+    });
+  }
+
+  const showRandomFlashcard=(box)=>{
       boxnum.innerHTML+=`<h3>${pluralize('st', parseInt(box))} Box</h3>`
       card_question.innerHTML = global_random_flashcards[global_random_flashcard_index]['question']
       card_answer.innerHTML = global_random_flashcards[global_random_flashcard_index]['answer']
       hyperlink_check.href=`/flashcardsjs/?box=${global_random_flashcards[global_random_flashcard_index]['box']}&check=true`
       hyperlink_x.href=`/flashcardsjs/?box=${global_random_flashcards[global_random_flashcard_index]['box']}&x=true`
-    }
+  }
+
+  const saveToLocalStorage=(question, answer)=>{
+      let match=false;let parsed_question;let unparsed_question;let unparsed_answer
+      let updated=false
+      unparsed_question=question
+      unparsed_answer=answer
+      try{
+        parsed_question=capitalizeWords(unparsed_question).trim()
+        for (let i=0;i<mycards.length;i++){
+          if(capitalizeWords(mycards[i]['question']).trim()===parsed_question){
+            console.log("capitalized = ",parsed_question, mycards[i]['question'])
+            match=true
+          }
+         }
+      } 
+      catch (error){
+        console.error("An error occurred:", error.message);
+      }
+      finally {
+        // Code that will always be executed
+        console.log("This will be executed no matter what.");
+      }
+
+      if(match===true){
+        const confirm_save_flashcard = window.confirm(`Would you like to save the changes made to this flashcard?`) 
+        if(confirm_save_flashcard){
+          for(let i=0;i<mycards.length;i++){
+            if(mycards[i]['question']==unparsed_question){
+              mycards[i]['question']=textarea_question_value
+              mycards[i]['answer']=textarea_answer_value
+              // card has now been updated in mycards
+              updated=true
+            }
+            
+          }
+
+          if(updated){
+            // localStorage.clear() clears everything stored in the localStorage for the current domain.
+            localStorage.clear()
+            localStorage.setItem("flashcards",JSON.stringify(mycards))//convert mycards  back into a string
+            window.alert(`This flashcard has been successfully edited.`)
+            window.location.href = ""
+          }
+          
+        }
+       
+      }
+      else{
+        window.location.href = ""
+
+      }
+
+      
+  // end saveToLocalStorage    
+  }
+
+
     
 window.onload = function () {
   boxes_main.style.display="none"
+  main_update_flashcard.display="none" 
 
   flashcardsToAppend=[{'question':'And I stood upon the sand of the sea, and saw a beast rise up out of the sea, having seven heads \
      and ten horns, and upon his horns ten crowns, and upon his heads the name of blasphemy.','answer':'Revelation 13:1'},
@@ -192,11 +299,7 @@ window.onload = function () {
   
   mycards=JSON.parse(localStorage.getItem("flashcards")) || []
   
-  
-
   tallyBoxes(mycards)
-  
-
   
 // Initialize a Set to store unique box numbers
 let inserted_questions = new Set();
@@ -208,13 +311,13 @@ let counted_boxes4 = false
 let counted_boxes5 = false
 
 
-// sort mycards by box #
+// sort mycards in ascending order by box #
 mycards.sort((a, b)=>a['box']-b['box'])
 
 for(let i = 0; i < mycards.length; i++) {
-    // Check if the box number is already inserted
+    // check to see if the box number is already inserted
     if (!inserted_questions.has(mycards[i]['question'])) {
-        // Add the box number to the set of inserted boxes
+        // if not add the box number to the set of inserted boxes
         inserted_questions.add(mycards[i]['question']);
         switch (mycards[i]['box']){
           case 1: 
@@ -249,20 +352,52 @@ for(let i = 0; i < mycards.length; i++) {
             break
         }
         
-        html+=`<article class="article-allcards"><h4>${mycards[i]['question']}</h4><p>${mycards[i]['answer']}</p></article>
+        html += `<article class="article-allcards"><h4>${mycards[i]['question']}</h4><p>${mycards[i]['answer']}</p></article>
         <a href="/flashcardsjs/?box=${mycards[i]['box']}" role="button">
             Box
         </a>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a id ="edit-flashcards" href="{% url 'editFlashcards' %}">Edit Flashcards</a>
+        <a id ="update-flashcard${i}" href="/flashcardsjs/?update-flashcard${i}">update</a>
         </a>&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="/flashcardsjs/?pk=${i}&box=${mycards[i]['box']}&delete=true" role="button">
             Delete
-        </a>`
+        </a>`;
+
+    
         
     }
 }
 
 insert_html.innerHTML=html
+
+for(let i = 0; i < mycards.length; i++) {
+
+  // Add event listener to the dynamically generated update-flashcard link
+  document.querySelector(`#update-flashcard${i}`).addEventListener('click', function(event) {
+        // Prevent default link behavior
+        event.preventDefault();
+        
+        // Get the index from the link's href attribute
+        const index = parseInt(this.getAttribute('href').match(/\d+/)[0]);
+        
+        // Your custom logic here, for example:
+
+        main.style.display="none"
+        main_update_flashcard.style.display="block"
+        clean_question=mycards[i]['question']
+        clean_answer=mycards[i]['answer']
+        textarea_question.innerHTML = clean_question
+        textarea_answer.innerHTML = clean_answer
+
+    });
+
+    // save updated flashcard
+    button_save_flashcard.addEventListener(("click"),(event)=>{
+      event.preventDefault()
+      saveToLocalStorage(clean_question, clean_answer)
+      //redirect to main page
+      //window.location.href = ""
+    })
+}
 
 const article_allcards=document.getElementsByClassName("article-allcards")
 for(let i=0;i<article_allcards.length;i++){
