@@ -165,13 +165,17 @@
     let global_random_flashcards
     let textarea_question_value = ""
     let textarea_answer_value = ""
+    let question_changed = false
+    let answer_changed = false
 
     textarea_question.addEventListener(("input"),(event)=>{
       textarea_question_value = textarea_question.value
+      question_changed = true
     })
 
     textarea_answer.addEventListener(("input"),(event)=>{
       textarea_answer_value = textarea_answer.value
+      answer_changed = true
     })
 
     hyperlink_check.addEventListener(("click"),(element) =>{
@@ -259,10 +263,18 @@
         if(confirm_save_flashcard){
           for(let i=0;i<mycards.length;i++){
             if(mycards[i]['question']==unparsed_question){
-              mycards[i]['question']=textarea_question_value
-              mycards[i]['answer']=textarea_answer_value
+              if(question_changed){
+                mycards[i]['question']=textarea_question_value.replace(/'/g,"")
+                question_changed=false
+              }
+
+              if(answer_changed){
+                mycards[i]['answer']=textarea_answer_value.replace(/'/g,"")
+                answer_changed=false
+              }
               // card has now been updated in mycards
               updated=true
+              break
             }
             
           }
