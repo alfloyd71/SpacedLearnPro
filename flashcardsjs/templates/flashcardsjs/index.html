@@ -1,5 +1,4 @@
 {% extends 'flashcardsjs/base-javascript.html' %}
-{% load static %}
 {% load humanize %}
 {% block customheadtags %}
 
@@ -14,7 +13,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 <!--default questions are in questions.js code snippet-->
-<script src="{% static 'flashcardsjs/js/questions.js' %}"></script>
+<script src="/static/flashcardsjs/js/questions.js"></script>
 
 {% endblock customheadtags %}
 
@@ -486,6 +485,6 @@ if(parameters_box && !delete_flashcard){
 
 </script>
 
-<script src="{% static 'flashcardsjs/js/tally-boxes.js' %}" ></script>
+<script src="/static/flashcardsjs/js/tally-boxes.js" ></script>
 
   {% endblock script%}
