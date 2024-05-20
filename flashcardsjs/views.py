@@ -3,6 +3,10 @@ from flashcardsjs.forms import FlashcardsForm
 
 from django.http import HttpResponseRedirect
 
+def renderSiteWebManifest(request):
+    context={}
+    return render(request, 'flashcardsjs/site.webmanifest', context, content_type="application/json")
+
 def editFlashcards(request):
     question=""
     answer=""

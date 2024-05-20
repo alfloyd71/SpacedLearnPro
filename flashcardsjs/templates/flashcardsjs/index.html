@@ -183,7 +183,7 @@
         updated = true; // Mark as updated
       }
       else{
-        window.location.href = `/flashcardsjs/?box=${parameters_box}`;
+        window.location.href = `{% url 'showFlashcards' %}?box=${parameters_box}`;
       }
 
       break // Exit the loop after updating one card
@@ -193,7 +193,7 @@
     if (updated) {
     // Redirect only if a card was updated
     // Bug Fixed - The page was redirecting every time with no conditional flag set
-       window.location.href = `/flashcardsjs/?box=${parameters_box}`;
+       window.location.href = `{% url 'showFlashcards' %}?box=${parameters_box}`;
     }
 
   })
@@ -210,7 +210,7 @@
       if (updated) {
     // Redirect only if a card was updated
     // Bug Fixed - The page was redirecting every time with no conditional flag set
-        window.location.href = `/flashcardsjs/?box=${box}`;
+        window.location.href = `{% url 'showFlashcards' %}?box=${box}`;
   
       }
   })
@@ -226,8 +226,8 @@
       boxnum.innerHTML+=`<h3>${pluralize('st', parseInt(box))} Box</h3>`
       card_question.innerHTML = global_random_flashcards[global_random_flashcard_index]['question']
       card_answer.innerHTML = global_random_flashcards[global_random_flashcard_index]['answer']
-      hyperlink_check.href=`/flashcardsjs/?box=${global_random_flashcards[global_random_flashcard_index]['box']}&check=true`
-      hyperlink_x.href=`/flashcardsjs/?box=${global_random_flashcards[global_random_flashcard_index]['box']}&x=true`
+      hyperlink_check.href=`{% url 'showFlashcards' %}?box=${global_random_flashcards[global_random_flashcard_index]['box']}&check=true`
+      hyperlink_x.href=`{% url 'showFlashcards' %}?box=${global_random_flashcards[global_random_flashcard_index]['box']}&x=true`
   }
 
   const saveToLocalStorage=(question, answer)=>{
@@ -359,12 +359,12 @@ for(let i = 0; i < mycards.length; i++) {
         }
         
         html += `<article class="article-allcards"><h4>${mycards[i]['question']}</h4><p>${mycards[i]['answer']}</p></article>
-        <a href="/flashcardsjs/?box=${mycards[i]['box']}" role="button">
+        <a href="{% url 'showFlashcards' %}?box=${mycards[i]['box']}" role="button">
             Box
         </a>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a id ="update-flashcard${i}" href="/flashcardsjs/?update-flashcard${i}">update</a>
+        <a id ="update-flashcard${i}" href="{% url 'showFlashcards' %}?update-flashcard${i}">update</a>
         </a>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/flashcardsjs/?pk=${i}&box=${mycards[i]['box']}&delete=true" role="button">
+        <a href="{% url 'showFlashcards' %}?pk=${i}&box=${mycards[i]['box']}&delete=true" role="button">
             Delete
         </a>`;
 
@@ -441,7 +441,7 @@ if(primary_key && parameters_box && delete_flashcard){
     // refresh the page to get an updated set of bible-flash-cards from localStorage
     
   }
-  window.location.href="/flashcardsjs"
+  window.location.href="{% url 'showFlashcards' %}"
 }
 
 if(parameters_box && !delete_flashcard){
