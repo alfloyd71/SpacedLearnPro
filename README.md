@@ -10,4 +10,4 @@ Optional Boxes: Some systems may include additional boxes for more advanced leve
 
 ![SpacedLearnPro.png](https://www.freesmartphoneapps.com/static/projects/images/SpacedLearnProAndroid.png)
 
-https://www.freesmartphoneapps.com/flashcardsjs/
+https://www.freesmartphoneapps.com/flashcards/
