@@ -1,147 +1,95 @@
 {% extends 'flashcardsjs/base-javascript.html' %}
 {% load humanize %}
+
 {% block customheadtags %}
-
-<!--bootstrap minified reduced size css version-->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
-<!--links to javascript files-->
-<!--the latest version jquery 3.5 should come before bootstap-min.js-->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<!--Popper.js is a popular JavaScript library used for positioning tooltips and popovers in web applications.-->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-
-<!--default questions are in questions.js code snippet-->
 <script src="/static/flashcardsjs/js/questions.js"></script>
-
 {% endblock customheadtags %}
 
-  {% block title %}
-  Spaced Learn Pro - flashcard box system
-  {% endblock %}
-  
-  {% block description %}
-  <meta name="description" content="Flashcards app that uses the 'flashcard box system' to organize and use flashcards in a systematic way to enhance learning through spaced repetition.">
-    
-  {% endblock %}
+{% block title %}
+Spaced Learn Pro - Flashcard Box System
+{% endblock %}
 
-  {% block stylehead %}
-  <style nonce="{{ request.csp_nonce }}">
-    html, body{
-      margin: 0;
-      display: block;
-      /*max-width: 99.173%;*/
-     
-    }
-    
-    #footer{
-      padding-left: 20%;
-    }
-    #stat-details{
-      color:white;
-    }
-    .upload-questions-label{
-      color:white;
-    }
-    .icon-checkmark,.icon-close{
-      color:white;
-    }
-    
-    #index-main{
-      display: block;
-      text-align: center; /* center all children of the <main> element */
-      padding: 0%;
-      margin: 0%;
-      width: 100%;
-    }
-    #main-update-flashcard{
-      display: none;
-    }
+{% block description %}
+<meta name="description" content="Flashcards app that uses the 'flashcard box system' to organize and use flashcards in a systematic way to enhance learning through spaced repetition.">
+{% endblock %}
 
-    #row1{
-      padding-top:5% ;
-    }
+{% block content %}
 
-    #textarea-question, #textarea-answer{
-      width: 50em;
-    }
-
-  </style>
-  {% endblock stylehead%}
-
-  {% block content %}
-    
-    <main id="index-main">
-      <h2>
-        All Cards
-    </h2>
-    <a href="{% url 'editFlashcards' %}" role="button">
-        ✨ Create New Card
-    </a>
-    
-    <span id="insert-html-here"></span>
-    
-    </main>
-
-    <main id="main-update-flashcard">
-
-      <article>
-      <form id ="form-flashcards" method = "post">
-            {% csrf_token %}
-    
-                    <table>
-                      <tr><td>Question</td></tr>
-                      <tr><td><textarea id="textarea-question">Question for this flashcard</textarea></td></tr>
-                      <tr><td>Answer</td></tr>
-                      <tr><td><textarea id="textarea-answer">Answer for this flashcard</textarea></td></tr>
-                    </table>
-                    
-          
-                    <button id="button-save-flashcard" class="btn btn-primary">Save Flashcard</button>
-        
-      </form>
-
-      
-  </article>
-  </main>
-
-    <!-- html for box page goes here -->
-    {% include 'flashcardsjs/card.html' %}
-    
-  
-
-  {% endblock content %}
-
-  <!-- footer goes here...-->
-  {% block footer %}
-  <footer class="footer py-5">
-    <div class="container">
-      <div class="row">
-         <div class="col-12 mx-auto text-center mt-1">
-            <p class="mb-0 text-secondary">
-              &copy2024 YourWebsite.com   
-             </p>
-          </div>
-      
-      </div>
+<!-- All Cards View -->
+<div id="index-main">
+    <div class="page-title">
+        <h2>All Cards</h2>
+        <p>Review and manage your flashcard collection</p>
     </div>
-  </footer>
-  {% endblock %}
 
-  {% block script %}
-  <script nonce="{{ request.csp_nonce }}">
+    <a href="{% url 'editFlashcards' %}" class="create-card-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+        </svg>
+        Create New Card
+    </a>
+
+    <div id="insert-html-here" class="cards-grid"></div>
+</div>
+
+<!-- Update Flashcard View (Hidden by default) -->
+<div id="main-update-flashcard" class="hidden">
+    <div class="page-title">
+        <h2>Edit Flashcard</h2>
+        <p>Update the question and answer below</p>
+    </div>
+
+    <div class="form-card">
+        <form id="form-flashcards" method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="textarea-question">Question</label>
+                <textarea id="textarea-question" class="form-textarea" placeholder="Enter your question here...">Question for this flashcard</textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="textarea-answer">Answer</label>
+                <textarea id="textarea-answer" class="form-textarea" placeholder="Enter your answer here...">Answer for this flashcard</textarea>
+            </div>
+
+            <div class="form-actions">
+                <button id="button-save-flashcard" type="submit" class="btn btn-primary btn-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                    </svg>
+                    Save Changes
+                </button>
+                <a href="{% url 'showFlashcards' %}" class="btn btn-secondary btn-lg">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Study Card View -->
+{% include 'flashcardsjs/card.html' %}
+
+{% endblock content %}
+
+{% block footer %}
+<footer class="app-footer">
+    <p><a target="_blank" rel="noopener" href="https://www.freesmartphoneapps.com/">FreeSmartphoneApps.com &copy; 2026</a></p>
+</footer>
+{% endblock %}
+
+{% block script %}
+<script nonce="{{ request.csp_nonce }}">
     // GLOBAL VARIABLES
     let clean_question
     let clean_answer
-    let parameters_box=1
+    let parameters_box = 1
     let mycards
-    let inputarea, flashcard, reference,flashcards
-    let buttonflag=false
-    let flashcardsToAppend;let parsedFlashcards;
+    let inputarea, flashcard, reference, flashcards
+    let buttonflag = false
+    let flashcardsToAppend; let parsedFlashcards;
     let myArrayMatchValue;
     let strmyFlashCards;
-    let box1=[];let box2=[];let box3=[];
+    let box1 = []; let box2 = []; let box3 = [];
     const main = document.getElementById("index-main")
     const main_update_flashcard = document.getElementById("main-update-flashcard")
     const card_question = document.getElementById("card-question")
@@ -162,324 +110,296 @@
     let question_changed = false
     let answer_changed = false
 
-    textarea_question.addEventListener(("input"),(event)=>{
-      textarea_question_value = textarea_question.value
-      question_changed = true
+    textarea_question.addEventListener(("input"), (event) => {
+        textarea_question_value = textarea_question.value
+        question_changed = true
     })
 
-    textarea_answer.addEventListener(("input"),(event)=>{
-      textarea_answer_value = textarea_answer.value
-      answer_changed = true
+    textarea_answer.addEventListener(("input"), (event) => {
+        textarea_answer_value = textarea_answer.value
+        answer_changed = true
     })
 
-    hyperlink_check.addEventListener(("click"),(element) =>{
-    let updated = false; // Flag to track if a card was updated
+    hyperlink_check.addEventListener(("click"), (element) => {
+        let updated = false;
 
-    for (let i = 0; i < mycards.length; i++) {
-     if (mycards[i]['answer'] === global_random_flashcards[global_random_flashcard_index]['answer']) {
-      if (parseInt(parameters_box) + 1 <= 5) {
-        mycards[i]['box'] = parseInt(parameters_box) + 1;
-        localStorage.setItem("flashcards", JSON.stringify(mycards));
-        updated = true; // Mark as updated
-      }
-      else{
-        window.location.href = `{% url 'showFlashcards' %}?box=${parameters_box}`;
-      }
-
-      break // Exit the loop after updating one card
-    }
-  }
-
-    if (updated) {
-    // Redirect only if a card was updated
-    // Bug Fixed - The page was redirecting every time with no conditional flag set
-       window.location.href = `{% url 'showFlashcards' %}?box=${parameters_box}`;
-    }
-
-  })
-
-  hyperlink_x.addEventListener("click",(event)=>{
-    for(let i=0;i<mycards.length;i++){
-        if(mycards[i]['answer']===global_random_flashcards[global_random_flashcard_index]['answer']){
-          mycards[i]['box']=parseInt("1")
-          localStorage.setItem("flashcards", JSON.stringify(mycards))
-          updated=true
-          break
-        }
-      }
-      if (updated) {
-    // Redirect only if a card was updated
-    // Bug Fixed - The page was redirecting every time with no conditional flag set
-        window.location.href = `{% url 'showFlashcards' %}?box=${box}`;
-  
-      }
-  })
-
-  const capitalizeWords=(inputString)=>{
-    // \w matches any word character, equivalent to [a-zA-Z0-9_]
-    return inputString.replace(/\b\w/g, function(match) {
-        return match.toUpperCase();
-    });
-  }
-
-  const showRandomFlashcard=(box)=>{
-      boxnum.innerHTML+=`<h3>${pluralize('st', parseInt(box))} Box</h3>`
-      card_question.innerHTML = global_random_flashcards[global_random_flashcard_index]['question']
-      card_answer.innerHTML = global_random_flashcards[global_random_flashcard_index]['answer']
-      hyperlink_check.href=`{% url 'showFlashcards' %}?box=${global_random_flashcards[global_random_flashcard_index]['box']}&check=true`
-      hyperlink_x.href=`{% url 'showFlashcards' %}?box=${global_random_flashcards[global_random_flashcard_index]['box']}&x=true`
-  }
-
-  const saveToLocalStorage=(question, answer)=>{
-      let match=false;let parsed_question;let unparsed_question;let unparsed_answer
-      let updated=false
-      unparsed_question=question
-      unparsed_answer=answer
-      try{
-        parsed_question=capitalizeWords(unparsed_question).trim()
-        for (let i=0;i<mycards.length;i++){
-          if(capitalizeWords(mycards[i]['question']).trim()===parsed_question){
-            console.log("capitalized = ",parsed_question, mycards[i]['question'])
-            match=true
-          }
-         }
-      } 
-      catch (error){
-        console.error("An error occurred:", error.message);
-      }
-      finally {
-        // Code that will always be executed
-        console.log("This will be executed no matter what.");
-      }
-
-      if(match===true){
-        const confirm_save_flashcard = window.confirm(`Would you like to save the changes made to this flashcard?`) 
-        if(confirm_save_flashcard){
-          for(let i=0;i<mycards.length;i++){
-            if(mycards[i]['question']==unparsed_question){
-              if(question_changed){
-                mycards[i]['question']=textarea_question_value.replace(/'/g,"")
-                question_changed=false
-              }
-
-              if(answer_changed){
-                mycards[i]['answer']=textarea_answer_value.replace(/'/g,"")
-                answer_changed=false
-              }
-              // card has now been updated in mycards
-              updated=true
-              break
+        for (let i = 0; i < mycards.length; i++) {
+            if (mycards[i]['answer'] === global_random_flashcards[global_random_flashcard_index]['answer']) {
+                if (parseInt(parameters_box) + 1 <= 5) {
+                    mycards[i]['box'] = parseInt(parameters_box) + 1;
+                    localStorage.setItem("flashcards", JSON.stringify(mycards));
+                    updated = true;
+                } else {
+                    window.location.href = `{% url 'showFlashcards' %}?box=${parameters_box}`;
+                }
+                break
             }
-            
-          }
+        }
 
-          if(updated){
-            // localStorage.clear() clears everything stored in the localStorage for the current domain.
-            localStorage.clear()
-            localStorage.setItem("flashcards",JSON.stringify(mycards))//convert mycards  back into a string
-            window.alert(`This flashcard has been successfully edited.`)
+        if (updated) {
+            window.location.href = `{% url 'showFlashcards' %}?box=${parameters_box}`;
+        }
+    })
+
+    hyperlink_x.addEventListener("click", (event) => {
+        let updated = false;
+        for (let i = 0; i < mycards.length; i++) {
+            if (mycards[i]['answer'] === global_random_flashcards[global_random_flashcard_index]['answer']) {
+                mycards[i]['box'] = parseInt("1")
+                localStorage.setItem("flashcards", JSON.stringify(mycards))
+                updated = true
+                break
+            }
+        }
+        if (updated) {
+            window.location.href = `{% url 'showFlashcards' %}?box=${box}`;
+        }
+    })
+
+    const capitalizeWords = (inputString) => {
+        return inputString.replace(/\b\w/g, function (match) {
+            return match.toUpperCase();
+        });
+    }
+
+    const showRandomFlashcard = (box) => {
+        boxnum.innerHTML = `<span class="study-box-label">${pluralize('st', parseInt(box))} Box</span>`
+        card_question.innerHTML = global_random_flashcards[global_random_flashcard_index]['question']
+        card_answer.innerHTML = global_random_flashcards[global_random_flashcard_index]['answer']
+        hyperlink_check.href = `{% url 'showFlashcards' %}?box=${global_random_flashcards[global_random_flashcard_index]['box']}&check=true`
+        hyperlink_x.href = `{% url 'showFlashcards' %}?box=${global_random_flashcards[global_random_flashcard_index]['box']}&x=true`
+    }
+
+    const saveToLocalStorage = (question, answer) => {
+        let match = false; let parsed_question; let unparsed_question; let unparsed_answer
+        let updated = false
+        unparsed_question = question
+        unparsed_answer = answer
+        try {
+            parsed_question = capitalizeWords(unparsed_question).trim()
+            for (let i = 0; i < mycards.length; i++) {
+                if (capitalizeWords(mycards[i]['question']).trim() === parsed_question) {
+                    match = true
+                }
+            }
+        }
+        catch (error) {
+            console.error("An error occurred:", error.message);
+        }
+
+        if (match === true) {
+            const confirm_save_flashcard = window.confirm(`Would you like to save the changes made to this flashcard?`)
+            if (confirm_save_flashcard) {
+                for (let i = 0; i < mycards.length; i++) {
+                    if (mycards[i]['question'] == unparsed_question) {
+                        if (question_changed) {
+                            mycards[i]['question'] = textarea_question_value.replace(/'/g, "")
+                            question_changed = false
+                        }
+
+                        if (answer_changed) {
+                            mycards[i]['answer'] = textarea_answer_value.replace(/'/g, "")
+                            answer_changed = false
+                        }
+                        updated = true
+                        break
+                    }
+                }
+
+                if (updated) {
+                    localStorage.clear()
+                    localStorage.setItem("flashcards", JSON.stringify(mycards))
+                    window.alert(`This flashcard has been successfully edited.`)
+                    window.location.href = ""
+                }
+            }
+        }
+        else {
             window.location.href = ""
-          }
-          
         }
-       
-      }
-      else{
-        window.location.href = ""
+    }
 
-      }
+    window.onload = function () {
+        boxes_main.style.display = "none"
+        main_update_flashcard.classList.add('hidden')
 
-      
-  // end saveToLocalStorage    
-  }
+        flashcardsToAppend = [{
+            'question': 'And I stood upon the sand of the sea, and saw a beast rise up out of the sea, having seven heads and ten horns, and upon his horns ten crowns, and upon his heads the name of blasphemy.',
+            'answer': 'Revelation 13:1'
+        },
+        { 'question': 'test question', 'answer': 'answered question' }]
 
+        mycards = JSON.parse(localStorage.getItem("flashcards")) || []
 
-    
-window.onload = function () {
-  boxes_main.style.display="none"
-  main_update_flashcard.display="none" 
+        tallyBoxes(mycards)
 
-  flashcardsToAppend=[{'question':'And I stood upon the sand of the sea, and saw a beast rise up out of the sea, having seven heads \
-     and ten horns, and upon his horns ten crowns, and upon his heads the name of blasphemy.','answer':'Revelation 13:1'},
-     {'question':'test question','answer':'answered question',   }]
-  
-  mycards=JSON.parse(localStorage.getItem("flashcards")) || []
-  
-  tallyBoxes(mycards)
-  
-// Initialize a Set to store unique box numbers
-let inserted_questions = new Set();
-let html = ''
-let counted_boxes1 = false
-let counted_boxes2 = false
-let counted_boxes3 = false
-let counted_boxes4 = false
-let counted_boxes5 = false
+        let inserted_questions = new Set();
+        let html = ''
+        let counted_boxes1 = false
+        let counted_boxes2 = false
+        let counted_boxes3 = false
+        let counted_boxes4 = false
+        let counted_boxes5 = false
 
+        mycards.sort((a, b) => a['box'] - b['box'])
 
-// sort mycards in ascending order by box #
-mycards.sort((a, b)=>a['box']-b['box'])
+        for (let i = 0; i < mycards.length; i++) {
+            if (!inserted_questions.has(mycards[i]['question'])) {
+                inserted_questions.add(mycards[i]['question']);
+                
+                switch (mycards[i]['box']) {
+                    case 1:
+                        if (counted_boxes1 === false) {
+                            html += `<div class="box-header"><h3>${pluralize('st', mycards[i]['box'])} Box</h3></div>`
+                            counted_boxes1 = true
+                        }
+                        break
+                    case 2:
+                        if (counted_boxes2 === false) {
+                            html += `<div class="box-header"><h3>${pluralize('st', mycards[i]['box'])} Box</h3></div>`
+                            counted_boxes2 = true
+                        }
+                        break
+                    case 3:
+                        if (counted_boxes3 === false) {
+                            html += `<div class="box-header"><h3>${pluralize('st', mycards[i]['box'])} Box</h3></div>`
+                            counted_boxes3 = true
+                        }
+                        break
+                    case 4:
+                        if (counted_boxes4 === false) {
+                            html += `<div class="box-header"><h3>${pluralize('st', mycards[i]['box'])} Box</h3></div>`
+                            counted_boxes4 = true
+                        }
+                        break
+                    case 5:
+                        if (counted_boxes5 === false) {
+                            html += `<div class="box-header"><h3>${pluralize('st', mycards[i]['box'])} Box</h3></div>`
+                            counted_boxes5 = true
+                        }
+                        break
+                }
 
-for(let i = 0; i < mycards.length; i++) {
-    // check to see if the box number is already inserted
-    if (!inserted_questions.has(mycards[i]['question'])) {
-        // if not add the box number to the set of inserted boxes
-        inserted_questions.add(mycards[i]['question']);
-        switch (mycards[i]['box']){
-          case 1: 
-            if(counted_boxes1===false){
-              html+=`<h3>${pluralize('st', mycards[i]['box'])} Box</h3>`
-              counted_boxes1=true
+                html += `
+                <div class="flashcard fade-in">
+                    <div class="flashcard-question">${mycards[i]['question']}</div>
+                    <div class="flashcard-answer">${mycards[i]['answer']}</div>
+                    <div class="flashcard-actions">
+                        <a href="{% url 'showFlashcards' %}?box=${mycards[i]['box']}" class="btn btn-primary btn-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
+                                <path d="M10.75 10.818v2.614A3.13 3.13 0 0011.888 13c.482-.315.612-.648.612-.875 0-.227-.13-.56-.612-.875a3.13 3.13 0 00-1.138-.432zM8.33 8.62c.053.055.115.11.184.164.208.16.46.284.736.363V6.603a2.45 2.45 0 00-.35.13c-.14.065-.27.143-.386.233-.377.292-.514.627-.514.909 0 .184.058.39.202.592.037.051.08.102.128.152z" />
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-6a.75.75 0 01.75.75v.316a3.78 3.78 0 011.653.713c.426.33.744.74.925 1.2a.75.75 0 01-1.395.55 1.35 1.35 0 00-.447-.563 2.187 2.187 0 00-.736-.363V9.3c.698.093 1.383.32 1.959.696.787.514 1.29 1.27 1.29 2.13 0 .86-.504 1.616-1.29 2.13-.576.377-1.261.603-1.96.696v.299a.75.75 0 11-1.5 0v-.3a3.78 3.78 0 01-1.653-.713 2.42 2.42 0 01-.925-1.199.75.75 0 011.395-.55c.12.303.337.573.447.563a2.187 2.187 0 00.736.363v-2.614a3.78 3.78 0 01-1.653-.713C6.2 9.174 5.75 8.417 5.75 7.556c0-.86.504-1.616 1.29-2.13A3.78 3.78 0 018.25 4.766V4.75A.75.75 0 019 4h1z" clip-rule="evenodd" />
+                            </svg>
+                            Study Box ${mycards[i]['box']}
+                        </a>
+                        <a id="update-flashcard${i}" href="#" class="btn btn-secondary btn-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
+                                <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
+                            </svg>
+                            Edit
+                        </a>
+                        <a href="{% url 'showFlashcards' %}?pk=${i}&box=${mycards[i]['box']}&delete=true" class="btn btn-danger btn-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
+                                <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd" />
+                            </svg>
+                            Delete
+                        </a>
+                    </div>
+                </div>`;
             }
-            break
-          case 2: 
-            if(counted_boxes2===false){
-              html+=`<h3>${pluralize('st', mycards[i]['box'])} Box</h3>`
-              counted_boxes2=true
-            }
-            break
-          case 3: 
-            if(counted_boxes3===false){
-              html+=`<h3>${pluralize('st', mycards[i]['box'])} Box</h3>`
-              counted_boxes3=true
-            }
-            break
-          case 4: 
-            if(counted_boxes4===false){
-              html+=`<h3>${pluralize('st', mycards[i]['box'])} Box</h3>`
-              counted_boxes4=true
-            }
-            break
-          case 5: 
-            if(counted_boxes5===false){
-              html+=`<h3>${pluralize('st', mycards[i]['box'])} Box</h3>`
-              counted_boxes5=true
-            }
-            break
         }
-        
-        html += `<article class="article-allcards"><h4>${mycards[i]['question']}</h4><p>${mycards[i]['answer']}</p></article>
-        <a href="{% url 'showFlashcards' %}?box=${mycards[i]['box']}" role="button">
-            Box
-        </a>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a id ="update-flashcard${i}" href="{% url 'showFlashcards' %}?update-flashcard${i}">update</a>
-        </a>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="{% url 'showFlashcards' %}?pk=${i}&box=${mycards[i]['box']}&delete=true" role="button">
-            Delete
-        </a>`;
 
-    
-        
+        if (mycards.length === 0) {
+            html = `
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="empty-state-icon">
+                    <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c.966 0 1.89.166 2.75.47a.75.75 0 001-.708V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z" />
+                </svg>
+                <h3>No flashcards yet</h3>
+                <p>Create your first flashcard to start learning!</p>
+                <a href="{% url 'editFlashcards' %}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    Create New Card
+                </a>
+            </div>`;
+        }
+
+        insert_html.innerHTML = html
+
+        for (let i = 0; i < mycards.length; i++) {
+            const updateLink = document.querySelector(`#update-flashcard${i}`)
+            if (updateLink) {
+                updateLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    main.classList.add('hidden')
+                    main_update_flashcard.classList.remove('hidden')
+                    clean_question = mycards[i]['question']
+                    clean_answer = mycards[i]['answer']
+                    textarea_question.value = clean_question
+                    textarea_answer.value = clean_answer
+                });
+            }
+        }
+
+        // Add save button listener ONCE, outside the loop
+        button_save_flashcard.addEventListener(("click"), (event) => {
+            event.preventDefault()
+            saveToLocalStorage(clean_question, clean_answer)
+        })
+
+        parsedFlashcards = mycards
+
+        const url_parameters = new URLSearchParams(window.location.search);
+        const primary_key = url_parameters.get('pk');
+        parameters_box = url_parameters.get('box')
+        const delete_flashcard = url_parameters.get('delete')
+        const check = url_parameters.get('check')
+        const x = url_parameters.get('x')
+
+        if (primary_key && parameters_box && delete_flashcard) {
+            const index = parseInt(primary_key)
+            let confirmation = window.confirm(`Are you sure you want to delete "${mycards[index].question}"?\n\n`)
+            if (confirmation) {
+                mycards.splice(index, 1)
+                localStorage.setItem("flashcards", JSON.stringify(mycards))
+            }
+            window.location.href = "{% url 'showFlashcards' %}"
+        }
+
+        if (parameters_box && !delete_flashcard) {
+            global_random_flashcards = []
+
+            for (i = 0; i < mycards.length; i++) {
+                if (mycards[i]['box'] === parseInt(parameters_box)) {
+                    global_random_flashcards.push(mycards[i])
+                }
+            }
+
+            global_random_flashcard_index = Math.floor(Math.random() * global_random_flashcards.length)
+
+            main.classList.add('hidden')
+            if (global_random_flashcards.length >= 1) {
+                boxes_main.style.display = "block"
+                showRandomFlashcard(parameters_box)
+            } else {
+                boxes_main.style.display = "none"
+                main.classList.remove('hidden')
+                insert_html.innerHTML = `
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="empty-state-icon">
+                        <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                    </svg>
+                    <h3>No cards in this box</h3>
+                    <p>Cards will appear here as you study and progress.</p>
+                    <a href="{% url 'showFlashcards' %}" class="btn btn-primary">View All Cards</a>
+                </div>`;
+            }
+        }
     }
-}
-
-insert_html.innerHTML=html
-
-for(let i = 0; i < mycards.length; i++) {
-
-  // Add event listener to the dynamically generated update-flashcard link
-  document.querySelector(`#update-flashcard${i}`).addEventListener('click', function(event) {
-        // Prevent default link behavior
-        event.preventDefault();
-        
-        // Get the index from the link's href attribute
-        const index = parseInt(this.getAttribute('href').match(/\d+/)[0]);
-        
-        // Your custom logic here, for example:
-
-        main.style.display="none"
-        main_update_flashcard.style.display="block"
-        clean_question=mycards[i]['question']
-        clean_answer=mycards[i]['answer']
-        textarea_question.innerHTML = clean_question
-        textarea_answer.innerHTML = clean_answer
-
-    });
-
-    // save updated flashcard
-    button_save_flashcard.addEventListener(("click"),(event)=>{
-      event.preventDefault()
-      saveToLocalStorage(clean_question, clean_answer)
-      //redirect to main page
-      //window.location.href = ""
-    })
-}
-
-const article_allcards=document.getElementsByClassName("article-allcards")
-for(let i=0;i<article_allcards.length;i++){
-  article_allcards[i].style.width="98%"
-  // center this article - 0 margin from top and bottom - auto (Automatic Left and Right Margin) 
-  article_allcards[i].style.margin = "0 auto"
-  article_allcards[i].style.textAlign="left"
-}
-
-box_article.style.width="98%"
-box_article.style.margin= "0 auto"
-box_article.style.textAlign="left"
-parsedFlashcards=mycards
-    
-// Get the search parameters from the URL
-const url_parameters = new URLSearchParams(window.location.search);
-
-// Get the value of a parameter
-const primary_key = url_parameters.get('pk');
-// Get box number as an integer
-parameters_box = url_parameters.get('box')
-const delete_flashcard = url_parameters.get('delete')
-const check = url_parameters.get('check')
-const x = url_parameters.get('x')
-
-if(primary_key && parameters_box && delete_flashcard){
-  // convert pk to an int using parseInt(pk)
-  const index = parseInt(primary_key)
-  let confirmation = window.confirm(`Are you sure you want to delete "${mycards[index].question}"\n\n`)
-  let true_statement = true
-  if(confirmation){
-    // only delete the primary_key index 
-    mycards.splice(index, 1)
-    localStorage.setItem("flashcards", JSON.stringify(mycards))
-    // refresh the page to get an updated set of bible-flash-cards from localStorage
-    
-  }
-  window.location.href="{% url 'showFlashcards' %}"
-}
-
-if(parameters_box && !delete_flashcard){
-  global_random_flashcards = []
-  
-  for(i=0;i<mycards.length;i++){
-    if(mycards[i]['box']===parseInt(parameters_box)){
-      global_random_flashcards.push(mycards[i])
-    }
-  }
-
-  global_random_flashcard_index=Math.floor(Math.random()*global_random_flashcards.length)
-  
-  main.style.display="none"
-  if(global_random_flashcards.length>=1){
-    boxes_main.style.display="block"
-    showRandomFlashcard(parameters_box)
-  }
-  else{
-    boxes_main.style.display="none"
-  }
-    
-  // display:block is the default for the <div> element
-  // hide everything in the <main> element
-  main.style.display="none"
-
-  
-  
-// end if(box && !delete_flashcard)
- }
-  
-//end window.onload function
-}
-
-  
-
 </script>
 
-<script src="/static/flashcardsjs/js/tally-boxes.js" ></script>
-
-  {% endblock script%}
+<script src="/static/flashcardsjs/js/tally-boxes.js"></script>
+{% endblock script %}

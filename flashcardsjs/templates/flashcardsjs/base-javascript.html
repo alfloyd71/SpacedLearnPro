@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <title>
@@ -11,10 +11,10 @@
     {% endblock description %}
     {% block baseheadtags %}
     <meta charset="UTF-8">
-    <meta name="viewport" content="user-scalable=no width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     
-    <!--This is the css used for the flashcards theme-->
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <!-- Modern CSS Styles -->
+    <link rel="stylesheet" href="/static/flashcardsjs/css/styles.css">
 
     <script src="/static/flashcardsjs/js/pluralize.js"></script>
     
@@ -25,92 +25,112 @@
     {% endblock stylehead %}
 </head>
 
-<style nonce="{{ request.csp_nonce }}">
-    /* Custom CSS */
-
-    #text-question{
-        width: 400px;
-    }
-    
-    :root {
-        --accent: #6e48ad;
-        --accent-bg: white;
-        --bg: #fff;
-        --text: #212121;
-        --text-light: #585858;
-        --border: #d8dae1;
-        --code: #d81b60;
-        --preformatted: #444;
-        --marked:#ffdd33;
-    }
-
-    article {
-        background-color: var(--marked);
-        border: 1px solid var(--border);
-        border-radius: 5px;
-        padding: 1em;
-        margin: 1em 0;
-    }
-
-    h2 {
-        text-align: center;
-    }
-
-    h2, h4 {
-        margin-top: 0;
-    }
-
-    hr {
-        background: var(--accent);
-        border-color: var(--accent);
-    }
-
-    button,
-    a[role="button"] {
-        color: blue;
-        text-decoration: none;
-    }
-
-    input, select, textarea {
-        width: 100%;
-    }
-</style>
-
-
-
 <body>
-    <header>
-        {% block navbar %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"><img width ="100%" height="100%" src="/static/flashcardsjs/images/icons/bars-solid-black.svg"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-          
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                    <!-- This is the root domain for your Django project - edit this to match your actual root domain -->
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="{% url 'showFlashcards' %}">Flashcards</a>
-                </li>
-                
-               </ul>
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <a href="{% url 'showFlashcards' %}" class="app-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent);">
+                    <path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z" clip-rule="evenodd" />
+                </svg>
+                Flashcards
+            </a>
+            
+            <!-- Theme Toggle -->
+            <div class="theme-toggle" id="theme-toggle">
+                <button type="button" class="theme-toggle-btn active" id="light-mode-btn" title="Light mode">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+                    </svg>
+                </button>
+                <button type="button" class="theme-toggle-btn" id="dark-mode-btn" title="Dark mode">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" />
+                    </svg>
+                </button>
             </div>
-          
-          </nav>
-        {% endblock navbar %}
-        <h1><img alt="lightning-bolt.svg" src="/static/flashcardsjs/images/icons/bolt-lightning-solid.svg"> Flashcards</h1>
-        {% include 'flashcardsjs/navigation-javascript.html' %}
+        </div>
     </header>
-        {% block content %}
-            <h2>Welcome to your Flashcards app!</h2>
-        {% endblock content %}
 
-        {% block footer %}
-        {% endblock footer %}
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="nav-links">
+            <a href="{% url 'showFlashcards' %}" class="nav-link" id="nav-all-cards">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                    <path d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z" />
+                </svg>
+                All Cards
+            </a>
+            <a id="first-box" href="{% url 'showFlashcards' %}?box=1" class="nav-link">
+                1st Box <span class="badge" id="badge-box1">0</span>
+            </a>
+            <a id="second-box" href="{% url 'showFlashcards' %}?box=2" class="nav-link">
+                2nd Box <span class="badge" id="badge-box2">0</span>
+            </a>
+            <a id="third-box" href="{% url 'showFlashcards' %}?box=3" class="nav-link">
+                3rd Box <span class="badge" id="badge-box3">0</span>
+            </a>
+            <a id="fourth-box" href="{% url 'showFlashcards' %}?box=4" class="nav-link">
+                4th Box <span class="badge" id="badge-box4">0</span>
+            </a>
+            <a id="fifth-box" href="{% url 'showFlashcards' %}?box=5" class="nav-link">
+                5th Box <span class="badge" id="badge-box5">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="app-container page-content">
+        {% block content %}
+            <div class="page-title">
+                <h2>Welcome to your Flashcards app!</h2>
+                <p>Start learning with spaced repetition</p>
+            </div>
+        {% endblock content %}
+    </main>
+
+    <!-- Footer -->
+    {% block footer %}
+    {% endblock footer %}
     
+    <!-- Theme Toggle Script -->
+    <script nonce="{{ request.csp_nonce }}">
+        (function() {
+            const html = document.documentElement;
+            const lightBtn = document.getElementById('light-mode-btn');
+            const darkBtn = document.getElementById('dark-mode-btn');
+            
+            // Check for saved theme preference or default to light
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            updateToggleButtons(savedTheme);
+            
+            // Light mode button
+            lightBtn.addEventListener('click', function() {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                updateToggleButtons('light');
+            });
+            
+            // Dark mode button
+            darkBtn.addEventListener('click', function() {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                updateToggleButtons('dark');
+            });
+            
+            function updateToggleButtons(theme) {
+                if (theme === 'dark') {
+                    darkBtn.classList.add('active');
+                    lightBtn.classList.remove('active');
+                } else {
+                    lightBtn.classList.add('active');
+                    darkBtn.classList.remove('active');
+                }
+            }
+        })();
+    </script>
+
     {% block script %}
     {% endblock %}
 </body>

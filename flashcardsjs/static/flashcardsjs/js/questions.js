@@ -1,10 +1,8 @@
 let myFlashCards = [
-    {question:"First president of the United States?",
-     answer:"George Washington", box:2}, 
-    {question:"Second president of the United States?",
-     answer:"John Adams", box:5},  
-    {question:"Third president of the United States?",
-     answer:"Thomas Jefferson", box:2}, 
-    {question:"Fourth president of the United States?",
-     answer:"James Madison", box:5},  
-];
+    {question:"But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",
+     answer:"Matthew 6:33 KJV", box:2}, 
+    {question:"And fear not them which kill the body, but are not able to kill the soul: but rather fear him which is able to destroy both soul and body in hell. - Mat 10:28 KJV",
+     answer:"Matthew 10:28 KJV", box:5},  
+     
+ 
+ ];
