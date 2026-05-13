@@ -10,9 +10,10 @@ A modern, responsive flashcard application built with Django. Study smarter with
 - **Progress Tracking**: Visual indicators show how many cards are in each box
 
 ## Screenshots
-![box.jpg](https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/box.jpg)
-![all-cards.jpg](https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/all-cards.jpg)
-![edit-flashcards.jpg](https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/edit-flashcards.jpg)
+<p align="center">
+  <!--<img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/box.jpg" alt="Box">-->
+  <img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/all-cards.jpg" alt="All Cards">&nbsp;&nbsp;<img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/edit-flashcards.jpg" alt="Edit FlashCards">
+</p>
 
 ### Light Mode
 The clean, minimal interface makes studying easy on the eyes during the day.
