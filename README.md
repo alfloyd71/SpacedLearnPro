@@ -149,3 +149,9 @@ The app uses CSS custom properties for theming. Modify the variables in `styles.
 ## License
 
 This project is open source and available under the [MIT License](https://github.com/alfloyd71/SpacedLearnPro?tab=MIT-1-ov-file#readme).
+
+## Acknowledgements
+
+- [Django](https://www.djangoproject.com/) - The web framework used for the backend
+- [Spaced Repetition](https://en.wikipedia.org/wiki/Spaced_repetition) - The learning technique that inspired this project
+- The open-source community for continuous inspiration and support
