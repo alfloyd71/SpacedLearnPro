@@ -15,6 +15,12 @@ A modern, responsive flashcard application built with Django. Study smarter with
 
 Spaced Learn Pro is a web-based flashcard application designed to help users learn and retain information more effectively through spaced repetition. The app organizes flashcards into five progressive boxes, allowing users to focus on material they find challenging while efficiently reviewing content they've already mastered. With support for both light and dark themes, a clean responsive interface, and seamless progress tracking, Spaced Learn Pro makes studying accessible and efficient on any device.
 
+## Screenshots
+<p align="center">
+  <!--<img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/box.jpg" alt="Box">-->
+  <img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/all-cards.jpg" alt="All Cards">&nbsp;&nbsp;<img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/edit-flashcards.jpg" alt="Edit FlashCards">
+</p>
+
 ---
 
 ## Features
@@ -29,12 +35,6 @@ Spaced Learn Pro is a web-based flashcard application designed to help users lea
 Explore the features of the Spaced Learn Pro App by checking out our live demo:
 
 **[View Live Demo](https://www.freesmartphoneapps.com/flashcards/)**
-
-## Screenshots
-<p align="center">
-  <!--<img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/box.jpg" alt="Box">-->
-  <img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/all-cards.jpg" alt="All Cards">&nbsp;&nbsp;<img width="300" src="https://www.freesmartphoneapps.com/static/mainpage/images/space-learned-pro/edit-flashcards.jpg" alt="Edit FlashCards">
-</p>
 
 ### Light Mode
 The clean, minimal interface makes studying easy on the eyes during the day.
