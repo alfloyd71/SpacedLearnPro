@@ -2,12 +2,33 @@
 
 A modern, responsive flashcard application built with Django. Study smarter with an intuitive interface that helps you track your learning progress using a spaced repetition system.
 
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#demo">Demo</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#project-structure">Project Structure</a> •
+  <a href="#license">License</a>
+</p>
+
+## Overview
+
+Spaced Learn Pro is a web-based flashcard application designed to help users learn and retain information more effectively through spaced repetition. The app organizes flashcards into five progressive boxes, allowing users to focus on material they find challenging while efficiently reviewing content they've already mastered. With support for both light and dark themes, a clean responsive interface, and seamless progress tracking, Spaced Learn Pro makes studying accessible and efficient on any device.
+
+---
+
 ## Features
 
 - **Spaced Repetition System**: Cards are organized into 5 boxes based on your knowledge level. Cards you know move forward; cards you need practice on move back.
 - **Dark/Light Mode**: Toggle between themes with automatic preference persistence
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Progress Tracking**: Visual indicators show how many cards are in each box
+
+## Demo
+
+Explore the features of the Spaced Learn Pro App by checking out our live demo:
+
+**[View Live Demo](https://www.freesmartphoneapps.com/flashcards/)**
 
 ## Screenshots
 <p align="center">
@@ -68,6 +89,20 @@ Reduce eye strain during evening study sessions with the dark theme.
 
 6. Open your browser to `http://localhost:8000/flashcardsjs/`
 
+## Usage
+
+Once the application is running, you can start using Spaced Learn Pro:
+
+1. **Home Page**: Navigate to the main page to see your flashcard boxes and progress overview
+2. **Add Cards**: Click "Edit Flashcards" to create new question and answer pairs
+3. **Study Session**: Select a box to begin studying the cards within it
+4. **Review Cards**: 
+   - Click on a card to reveal the answer
+   - Select "I Know It" to advance the card to the next box
+   - Select "Need Practice" to move the card back to Box 1
+5. **Toggle Theme**: Use the theme toggle button to switch between light and dark modes
+6. **Track Progress**: Monitor your learning progress through the visual box indicators on the home page
+
 ## Project Structure
 
 ```
@@ -113,4 +148,4 @@ The app uses CSS custom properties for theming. Modify the variables in `styles.
 
 ## License
 
-MIT License - feel free to use this project for personal or commercial purposes.
+This project is open source and available under the [MIT License](https://github.com/alfloyd71/SpacedLearnPro?tab=MIT-1-ov-file#readme).
