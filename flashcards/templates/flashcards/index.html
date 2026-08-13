@@ -217,7 +217,6 @@ Spaced Learn Pro - Flashcard Box System
                 }
 
                 if (updated) {
-                    localStorage.clear()
                     localStorage.setItem("flashcards", JSON.stringify(mycards))
                     window.alert(`This flashcard has been successfully edited.`)
                     window.location.href = ""

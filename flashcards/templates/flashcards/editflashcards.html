@@ -125,7 +125,7 @@ Create New Flashcard - Spaced Learn Pro
     const clearLocalStorage = () => {
         const confirm_remove_all = window.confirm("Would you like to remove all flashcards?")
         if (confirm_remove_all) {
-            localStorage.clear()
+            localStorage.removeItem("flashcards")
             window.alert("All flashcards have been removed from your web browser")
             window.location.href = ""
         }
@@ -150,7 +150,6 @@ Create New Flashcard - Spaced Learn Pro
             const confirm_save_flashcard = window.confirm(`Would you like to save "${unparsed_question}" to your flashcards list?`)
             if (confirm_save_flashcard) {
                 mycards.push({ question: question.value, answer: answer.value, box: 1 })
-                localStorage.clear()
                 localStorage.setItem("flashcards", JSON.stringify(mycards))
                 window.confirm(`"${unparsed_question}" has been added to your flashcards list.`)
             }
