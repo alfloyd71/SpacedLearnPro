@@ -1,8 +1,8 @@
-{% extends 'flashcardsjs/base-javascript.html' %}
+{% extends 'flashcards/base-javascript.html' %}
 {% load humanize %}
 
 {% block customheadtags %}
-<script src="/static/flashcardsjs/js/questions.js"></script>
+<script src="/static/flashcards/js/questions.js"></script>
 {% endblock customheadtags %}
 
 {% block title %}
@@ -67,7 +67,7 @@ Spaced Learn Pro - Flashcard Box System
 </div>
 
 <!-- Study Card View -->
-{% include 'flashcardsjs/card.html' %}
+{% include 'flashcards/card.html' %}
 
 {% endblock content %}
 
@@ -162,10 +162,20 @@ Spaced Learn Pro - Flashcard Box System
         });
     }
 
+    // Escape user text before it goes through innerHTML.
+    // Whitespace itself is preserved by `white-space: pre-wrap` in styles.css.
+    const escapeHtml = (inputString) => {
+        return String(inputString)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+    }
+
     const showRandomFlashcard = (box) => {
         boxnum.innerHTML = `<span class="study-box-label">${pluralize('st', parseInt(box))} Box</span>`
-        card_question.innerHTML = global_random_flashcards[global_random_flashcard_index]['question']
-        card_answer.innerHTML = global_random_flashcards[global_random_flashcard_index]['answer']
+        card_question.textContent = global_random_flashcards[global_random_flashcard_index]['question']
+        card_answer.textContent = global_random_flashcards[global_random_flashcard_index]['answer']
         hyperlink_check.href = `{% url 'showFlashcards' %}?box=${global_random_flashcards[global_random_flashcard_index]['box']}&check=true`
         hyperlink_x.href = `{% url 'showFlashcards' %}?box=${global_random_flashcards[global_random_flashcard_index]['box']}&x=true`
     }
@@ -193,12 +203,12 @@ Spaced Learn Pro - Flashcard Box System
                 for (let i = 0; i < mycards.length; i++) {
                     if (mycards[i]['question'] == unparsed_question) {
                         if (question_changed) {
-                            mycards[i]['question'] = textarea_question_value.replace(/'/g, "")
+                            mycards[i]['question'] = textarea_question_value
                             question_changed = false
                         }
 
                         if (answer_changed) {
-                            mycards[i]['answer'] = textarea_answer_value.replace(/'/g, "")
+                            mycards[i]['answer'] = textarea_answer_value
                             answer_changed = false
                         }
                         updated = true
@@ -282,8 +292,8 @@ Spaced Learn Pro - Flashcard Box System
 
                 html += `
                 <div class="flashcard fade-in">
-                    <div class="flashcard-question">${mycards[i]['question']}</div>
-                    <div class="flashcard-answer">${mycards[i]['answer']}</div>
+                    <div class="flashcard-question">${escapeHtml(mycards[i]['question'])}</div>
+                    <div class="flashcard-answer">${escapeHtml(mycards[i]['answer'])}</div>
                     <div class="flashcard-actions">
                         <a href="{% url 'showFlashcards' %}?box=${mycards[i]['box']}" class="btn btn-primary btn-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
@@ -401,5 +411,5 @@ Spaced Learn Pro - Flashcard Box System
     }
 </script>
 
-<script src="/static/flashcardsjs/js/tally-boxes.js"></script>
+<script src="/static/flashcards/js/tallyBoxes.js"></script>
 {% endblock script %}

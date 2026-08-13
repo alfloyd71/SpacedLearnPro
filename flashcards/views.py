@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from flashcardsjs.forms import FlashcardsForm
+from flashcards.forms import FlashcardsForm
 
 from django.http import HttpResponseRedirect
 
 def renderSiteWebManifest(request):
     context={}
-    return render(request, 'flashcardsjs/site.webmanifest', context, content_type="application/json")
+    return render(request, 'flashcards/site.webmanifest', context, content_type="application/json")
 
 def editFlashcards(request):
     question=""
@@ -33,18 +33,18 @@ def editFlashcards(request):
     form=FlashcardsForm()
     context={'form':form, }
 
-    return render(request, 'flashcardsjs/editflashcards.html', context)
+    return render(request, 'flashcards/editflashcards.html', context)
 
 def fetchCard(request):
-    return render(request, "flashcardsjs/card.html")
+    return render(request, "flashcards/card.html")
 
 def showFlashcards(request):
     form=FlashcardsForm()
     context={'form':form, }
-    return render(request, "flashcardsjs/index.html",)
+    return render(request, "flashcards/index.html",)
 
 def getBox(request):
-    template_name = "flashcardsjs/box.html"
+    template_name = "flashcards/box.html"
 
     return render(request, template_name)
     

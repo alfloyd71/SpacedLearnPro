@@ -1,5 +1,5 @@
 from django.urls import path
-from flashcardsjs.views import (editFlashcards, showFlashcards, fetchCard,)
+from flashcards.views import (editFlashcards, showFlashcards, fetchCard,)
 
 urlpatterns=[
      path('', showFlashcards, name='showFlashcards'),
